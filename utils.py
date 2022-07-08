@@ -5,7 +5,8 @@ import yaml
 import numpy as np
 from IPython.display import Audio
 from IPython.display import display
-import soundfile as sf
+
+import essentia.standard as estd
 
 def load_tonic(path):
     """
@@ -101,7 +102,8 @@ def pitch_seq_to_cents(pseq, tonic):
 #    audio_to_play = 
 #    display(Audio(audio_to_play, rate=sr))
 def listen_pattern(rec, fold, gr, oc, sr):
-    audio, sr = sf.read(os.path.join('.', 'data', rec, fold, str(gr)+'_'+str(oc)+'.wav'))
+    audio_path = os.path.join('.', 'data', rec, fold, str(gr)+'_'+str(oc)+'.wav')
+    audio = estd.MonoLoader(filename=audio_path)()
     display(Audio(audio, rate=sr))
 
 ####### MISC UTILS

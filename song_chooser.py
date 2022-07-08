@@ -4,8 +4,6 @@ import os
 import pickle
 import numpy as np
 import pandas as pd
-#import essentia.standard as estd
-import soundfile as sf
 from tqdm.notebook import tqdm
 
 from utils import load_json, load_yaml, cents_to_pitch, get_pitch_timestep
