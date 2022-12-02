@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+Recordings:
+<ul>
+{% for recording in recordings %}
+  <li><a href="{{url_for('recording', title=recording)}}">{{recording}}</a></li>
+{% endfor %}
+
+<p>
+Groups: <a href="/">1</a> <a href="/">2</a> 3 <a href="/">4</a> <a href="/">4</a>
+</p>
+
+Patterns: <a href="/">aaaaabbab</a> <a href="/">bbbccaa</a> <a href="/">ccddccff</a>
+{% endblock %}

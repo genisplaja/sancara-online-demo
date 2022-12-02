@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+Recording {{title}}<br>
+Pattern type: {{pat_type}}<br>
+Identifier: {{identifier}}
+
+{% for r in results %}
+<p>
+<img src="{{url_for('image', title=title, pat_type=pat_type, identifier=identifier, part=loop.index0)}}" />
+</p>
+{% endfor %}
+
+{% endblock %}
