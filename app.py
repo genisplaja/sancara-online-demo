@@ -20,7 +20,7 @@ data = pickle.load(open("test.pkl", "rb"))
 #data = song_chooser.SongChooser.get_data()
 
 @app.route('/')
-def home():
+def index():
     recordings = list(data.keys())
     recordings.remove('audio')
     return render_template("index.html", recordings=recordings)
@@ -54,6 +54,8 @@ def pattern(title, pat_type, identifier):
     else:
         groups = recording['groups']
     patterns = recording['parsed_patterns']
+    pattern_names = [str(p) for p in patterns.keys()]
+    group_names = [str(g) for g in groups.keys()]
 
     if pat_type == "Group":
         # If the type is "Group" then the identifier is an int index. validate_args has already
@@ -65,8 +67,8 @@ def pattern(title, pat_type, identifier):
         results = patterns[identifier]
 
     return render_template(
-        "pattern.html", title=title, pat_type=pat_type, 
-        has_annotations=has_annotations, identifier=identifier, results=results
+        "recording.html", title=title, patterns=pattern_names, groups=group_names,
+        pat_type=pat_type, has_annotations=has_annotations, identifier=identifier, results=results
     )
 
 @app.route('/image/<string:title>/<string:pat_type>/<string:identifier>/<string:part>.png')

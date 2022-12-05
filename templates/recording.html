@@ -1,20 +1,48 @@
 {% extends "base.html" %}
 
 {% block content %}
+<p><a href="{{url_for('index')}}">Return to recording list</a></p>
 <h3>Recording: {{title}}</h3>
 
 <p>
 Groups: 
 {% for g in groups %}
+{% if pat_type == 'Group' and identifier == g %}{{g}}{% else %}
 <a href="{{url_for('pattern', title=title, pat_type='Group', identifier=g)}}">{{g}}</a>
+{% endif %}
 {% endfor %}
 </p>
 
 <p>
 Patterns: 
 {% for p in patterns %}
+{% if pat_type == 'Pattern' and identifier == p %}{{p}}{% else %}
 <a href="{{url_for('pattern', title=title, pat_type='Pattern', identifier=p)}}">{{p}}</a>
+{% endif %}
 {% endfor %}
 </p>
+
+{% if results %}
+Pattern type: {{pat_type}}<br>
+Identifier: {{identifier}}
+
+{% for r in results %}
+<div class="d-flex align-items-center flex-column mb-7">
+    {% if pat_type == "Group" and has_annotations %}
+    <div>
+        This pattern has been identified to match: {{r[2][0]}}<br />
+        The actual pattern in instance is: {{r[3][0]}}
+    </div>
+    {% endif %}
+    <div>
+        <img style="width:100%; height:auto" src="{{url_for('image', title=title, pat_type=pat_type, identifier=identifier, part=loop.index0)}}" />
+    </div>
+    <div>
+        <audio controls src="{{url_for('audio', rec=title, fold=r[-1], gr=r[-3], oc=r[-2])}}"> 
+    </div>
+        <hr style="width: 100%">
+</div>
+{% endfor %}
+{% endif %}
 
 {% endblock %}
