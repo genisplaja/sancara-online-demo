@@ -1,7 +1,9 @@
 import io
+import os
 import pickle
 
-from flask import Flask, render_template, Response
+from flask import Flask, render_template, Response, send_from_directory
+from werkzeug.security import safe_join
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -14,12 +16,13 @@ from utils import listen_pattern, pitch_seq_to_cents, myround, pitch_to_cents
 
 app = Flask(__name__)
 
-# data = pickle.load(open("test.pkl", "rb"))
-data = song_chooser.SongChooser.get_data()
+data = pickle.load(open("test.pkl", "rb"))
+#data = song_chooser.SongChooser.get_data()
 
 @app.route('/')
 def home():
-    recordings = data.keys()
+    recordings = list(data.keys())
+    recordings.remove('audio')
     return render_template("index.html", recordings=recordings)
 
 @app.route('/recording/<string:title>')
@@ -44,8 +47,10 @@ def pattern(title, pat_type, identifier):
         return ret, code
 
     recording = data[title]
+    has_annotations = False
     if recording['annotations'] is not None:
         groups = recording['groups_with_annotations']
+        has_annotations = True
     else:
         groups = recording['groups']
     patterns = recording['parsed_patterns']
@@ -59,7 +64,10 @@ def pattern(title, pat_type, identifier):
         # checked that the index is valid
         results = patterns[identifier]
 
-    return render_template("pattern.html", title=title, pat_type=pat_type, identifier=identifier, results=results)
+    return render_template(
+        "pattern.html", title=title, pat_type=pat_type, 
+        has_annotations=has_annotations, identifier=identifier, results=results
+    )
 
 @app.route('/image/<string:title>/<string:pat_type>/<string:identifier>/<string:part>.png')
 def image(title, pat_type, identifier, part):
@@ -98,6 +106,17 @@ def image(title, pat_type, identifier, part):
     fig = plot_patterns(recording, results[part], pat_type, freqs, times, pitch_hop, annotations, plot_kwargs)
     FigureCanvas(fig).print_png(output)
     return Response(output.getvalue(), mimetype='image/png')
+
+
+@app.route('/audio/<string:rec>/<string:fold>/<string:gr>/<string:oc>.wav')
+def audio(rec, fold, gr, oc):
+    audio_path = safe_join('data', rec, fold, str(gr)+'_'+str(oc)+'.wav')
+    audio_dir = os.path.dirname(audio_path)
+    audio_fname = os.path.basename(audio_path)
+    if not os.path.exists(audio_path):
+        return "no such audio file", 404
+
+    return send_from_directory(audio_dir, audio_fname)
 
 
 def validate_args(title, type, identifier):

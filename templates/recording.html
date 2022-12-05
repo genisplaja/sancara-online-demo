@@ -1,19 +1,20 @@
 {% extends "base.html" %}
 
 {% block content %}
-Recording {{title}}
+<h3>Recording: {{title}}</h3>
 
 <p>
 Groups: 
 {% for g in groups %}
-<a href="{{url_for('pattern', title=title, pat_type='Groups', identifier=g)}}">{{g}}</a>
+<a href="{{url_for('pattern', title=title, pat_type='Group', identifier=g)}}">{{g}}</a>
 {% endfor %}
 </p>
 
 <p>
 Patterns: 
 {% for p in patterns %}
-{{p}}
+<a href="{{url_for('pattern', title=title, pat_type='Pattern', identifier=p)}}">{{p}}</a>
 {% endfor %}
 </p>
+
 {% endblock %}
