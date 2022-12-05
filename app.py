@@ -2,6 +2,8 @@ import io
 import os
 import pickle
 
+import sentry_sdk
+from sentry_sdk.integrations.flask import FlaskIntegration
 from flask import Flask, render_template, Response, send_from_directory
 from werkzeug.security import safe_join
 
@@ -14,10 +16,20 @@ from matplotlib.figure import Figure
 import song_chooser
 from utils import listen_pattern, pitch_seq_to_cents, myround, pitch_to_cents
 
-app = Flask(__name__)
+#data = pickle.load(open("test.pkl", "rb"))
+data = song_chooser.SongChooser.get_data()
 
-data = pickle.load(open("test.pkl", "rb"))
-#data = song_chooser.SongChooser.get_data()
+if "SENTRY_DSN" in os.environ:
+    sentry_sdk.init(
+        dsn=os.environ["SENTRY_DSN"],
+        integrations=[
+            FlaskIntegration(),
+        ],
+        traces_sample_rate=1.0
+    )
+
+
+app = Flask(__name__)
 
 @app.route('/')
 def index():
