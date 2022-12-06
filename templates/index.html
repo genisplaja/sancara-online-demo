@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<p>This online demo can be used to browse through the repeated melodic pattern groups in 
+Carnatic Music recordings. The patterns are grouped using a matrix similarity algorithm 
+on top of time and pitch invariant feature embeddings learnt by a complex auto-encoder 
+(CAE).</p>
+
+<p>You can browse the grouped patterns by performance. Some perfomances are annotated
+ by an expert. In such case, the user is able to browse the patters than have been 
+ assigned to such annotations, meaning these are musicologically-relevant for the
+ performance.</p>
+
+<h2>Recordings</h2>
+<ul>
+{% for recording in recordings %}
+  <li><a href="{{url_for('recording', title=recording)}}">{{recording}}</a></li>
+{% endfor %}
+
+{% endblock %}

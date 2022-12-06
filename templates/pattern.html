@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<p><a href="{{url_for('index')}}">Return to recording list</a></p>
+<h3>Recording: {{title}}</h3>
+
+Pattern type: {{pat_type}}<br>
+Identifier: {{identifier}}
+
+{% for r in results %}
+<div class="d-flex align-items-center flex-column">
+    {% if pat_type == "Group" and has_annotations %}
+    <div>
+        This pattern has been identified to match: {{r[2][0]}}<br />
+        The actual pattern in instance is: {{r[3][0]}}
+    </div>
+    {% endif %}
+    <div>
+        <img style="width:100%; height:auto" src="{{url_for('image', title=title, pat_type=pat_type, identifier=identifier, part=loop.index0)}}" />
+    </div>
+    <div>
+        <audio controls src="{{url_for('audio', rec=title, fold=r[-1], gr=r[-3], oc=r[-2])}}"> 
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}
