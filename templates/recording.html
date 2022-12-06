@@ -4,6 +4,7 @@
 <p><a href="{{url_for('index')}}">Return to recording list</a></p>
 <h3>Recording: {{title}}</h3>
 
+{% if groups %}
 <p>
 Groups: 
 {% for g in groups %}
@@ -12,7 +13,9 @@ Groups:
 {% endif %}
 {% endfor %}
 </p>
+{% endif %}
 
+{% if patterns %}
 <p>
 Patterns: 
 {% for p in patterns %}
@@ -21,6 +24,7 @@ Patterns:
 {% endif %}
 {% endfor %}
 </p>
+{% endif %}
 
 {% if results %}
 Pattern type: {{pat_type}}<br>

@@ -49,7 +49,14 @@ def recording(title):
     else:
         groups = recording['groups']
 
-    return render_template("recording.html", title=title, patterns=patterns.keys(), groups=groups.keys())
+    pattern_names =  None
+    if patterns:
+        pattern_names = [str(p) for p in patterns.keys()]
+    group_names = None
+    if groups:
+        group_names = [str(g) for g in groups.keys()]
+
+    return render_template("recording.html", title=title, patterns=pattern_names, groups=group_names)
 
 
 @app.route('/recording/<string:title>/<string:pat_type>/<string:identifier>')
@@ -66,8 +73,12 @@ def pattern(title, pat_type, identifier):
     else:
         groups = recording['groups']
     patterns = recording['parsed_patterns']
-    pattern_names = [str(p) for p in patterns.keys()]
-    group_names = [str(g) for g in groups.keys()]
+    pattern_names =  None
+    if patterns:
+        pattern_names = [str(p) for p in patterns.keys()]
+    group_names = None
+    if groups:
+        group_names = [str(g) for g in groups.keys()]
 
     if pat_type == "Group":
         # If the type is "Group" then the identifier is an int index. validate_args has already
